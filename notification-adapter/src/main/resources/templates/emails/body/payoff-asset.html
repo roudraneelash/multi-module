@@ -1,0 +1,96 @@
+<table width="100%" cellpadding="0" cellspacing="0"
+       th:fragment="body">
+
+    <tr>
+        <td class="body">
+
+            <p>Dear Sir/Madam,</p>
+
+            <p>
+                An asset has been marked for payoff in the
+                <strong>Equipment Finance</strong> system.
+            </p>
+
+            <!-- INFO BOX -->
+            <table width="100%" cellpadding="0" cellspacing="0"
+                   class="info-box">
+                <tr>
+                    <td>
+
+                        <div class="info-row">
+                            <strong>Finance Entity:</strong>
+                            <span th:text="${data.financeEntity_name}"></span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Dealer Name:</strong>
+                            <span th:text="${data.dealer_name}"></span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Asset Name:</strong>
+                            <span th:text="${data.asset_Name}"></span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Manufacturer:</strong>
+                            <span th:text="${data.manufacturer}"></span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Serial Number:</strong>
+                            <span th:text="${data.serial_number}"></span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Type of Business:</strong>
+                            <span th:text="${data.type_of_business}"></span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Internal Ref Number:</strong>
+                            <span th:text="${data.internal_ref_number}"></span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Disbursement Date:</strong>
+                            <span th:text="${data.disb_date}"></span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Outstanding Amount:</strong>
+                            <span th:text="${data.outstanding_amount}"></span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Payoff Status:</strong>
+                            <span th:text="${data.payoff_status}"></span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Created By:</strong>
+                            <span th:text="${data.creator}"></span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Approved By:</strong>
+                            <span th:text="${data.approver}"></span>
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
+
+            <p>
+                Please review the payoff details and take necessary action.
+            </p>
+
+            <p>
+                Best regards,<br/>
+                <strong>BPCE</strong><br/>
+                Equipment Finance Team
+            </p>
+
+        </td>
+    </tr>
+</table>

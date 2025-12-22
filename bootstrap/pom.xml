@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.multi.module</groupId>
+        <artifactId>multimodule-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>bootstrap</artifactId>
+
+    <properties>
+        <start-class>com.multi.module.boot.StartUpApplication</start-class>
+    </properties>
+    <dependencies>
+        <!-- Modules -->
+        <dependency>
+            <groupId>com.multi.module</groupId>
+            <artifactId>domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.multi.module</groupId>
+            <artifactId>domain-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.multi.module</groupId>
+            <artifactId>rest-adapter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.multi.module</groupId>
+            <artifactId>notification-adapter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <parallel>classes</parallel>
+                    <threadCount>4</threadCount>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <reuseForks>true</reuseForks>
+                    <forkedProcessExitTimeoutInSeconds>300</forkedProcessExitTimeoutInSeconds>
+                    <argLine>
+                        -Xmx2g -XX:MaxPermSize=512m
+                        -XX:+HeapDumpOnOutOfMemoryError
+                        -XX:HeapDumpPath=${project.build.directory}/heapdump.hprof
+                        -XX:ErrorFile=${project.build.directory}/hs_err_pid%p.log
+                    </argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

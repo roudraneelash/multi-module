@@ -1,0 +1,57 @@
+server:
+  port: 8080
+  error:
+    whitelabel:
+        enabled: false
+
+  tomcat:
+    threads:
+      max: 50
+
+  servlet:
+    context-path: /api
+
+    include-stacktrace: NEVER
+    include-binding-errors: NEVER
+    include-message: NEVER
+    include-exception: false
+
+spring:
+  web:
+    resources:
+      add-mappings: false
+  thymeleaf:
+    cache: false
+    mode: HTML5
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: devuseash@gmail.com
+    password: aucg tfgv pykw snsi
+    from: noreply@equipmentsolutions.groupebpce.com
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+# Application specific properties
+app:
+  email:
+    logo-url: https://www.equipmentsolutions.groupebpce.com/app/uploads/2025/02/bpce-sgef-rvb.jpg
+    copyright-url: https://www.equipmentsolutions.groupebpce.com/
+    contact-url: https://www.equipmentsolutions.groupebpce.com/contact-us/
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
