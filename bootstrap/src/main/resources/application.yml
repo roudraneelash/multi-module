@@ -30,8 +30,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: devuseash@gmail.com
-    password: aucg tfgv pykw snsi
+    username: [gmail-id]
+    password: [16-digit-app-password]
     from: noreply@equipmentsolutions.groupebpce.com
     properties:
       mail:
