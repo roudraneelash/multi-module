@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.Map;
-
 @Component
 @RequiredArgsConstructor
 public class TemplateResolver {

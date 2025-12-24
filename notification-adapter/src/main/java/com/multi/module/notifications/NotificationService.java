@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class NotificationService implements ObtainNotificationClient {
-    private final ContextMapperRegistry contextMapperRegistry;
     private final EmailResolver emailResolver;
     private final TemplateResolver templateResolver;
     private final SmtpClient smtpClient;

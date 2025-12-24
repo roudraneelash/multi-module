@@ -4,5 +4,5 @@ public enum Notification {
     INSURANCE_EXPIRY,
     LIMIT_EXPIRY,
     PAYOFF_ASSET,
-    TRANSFORMATION_ASSET;
+    TRANSFORMATION_ASSET
 }
