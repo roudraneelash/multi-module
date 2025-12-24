@@ -3,6 +3,7 @@ package com.multi.module.notifications.resolver;
 import com.multi.module.domain.notifications.enums.Notification;
 import com.multi.module.domain.notifications.model.NotificationContext;
 import com.multi.module.notifications.enums.NotificationTemplate;
+import com.multi.module.notifications.mapper.ContextMapperRegistry;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,7 @@ import java.util.Map;
 public class TemplateResolver {
 
     private final TemplateEngine templateEngine;
-    private final ContextResolver contextResolver;
+    private final ContextMapperRegistry contextMapperRegistry;
 
     @Value("${app.email.logo-url}")
     private String logoUrl;
@@ -33,26 +34,21 @@ public class TemplateResolver {
             Notification notification
     ) {
         NotificationTemplate template =
-                NotificationTemplate.fromDomain(notification);
+                NotificationTemplate.from(notification);
 
-        Map<String, Object> variables =
-                contextResolver.resolve(notificationContext, template);
+        Object contextModel =
+                contextMapperRegistry.resolve(
+                        notification,
+                        notificationContext.getPayload()
+                );
 
         Context thymeleafContext = new Context();
-        thymeleafContext.setVariables(variables);
-        thymeleafContext.setVariable("logoUrl", logoUrl);
-        thymeleafContext.setVariable("copyrightUrl", copyrightUrl);
-        thymeleafContext.setVariable("contactUrl", contactUrl);
+        thymeleafContext.setVariable("data", contextModel);
 
-        String fileName = template.getTemplateFileName();
-        if (fileName != null && fileName.endsWith(".html")) {
-            fileName = fileName.substring(0, fileName.length() - 5);
-        }
-        thymeleafContext.setVariable("bodyFragment", "emails/body/" + fileName);
-
-        return templateEngine.process(
-                "emails/layout",
-                thymeleafContext
+        thymeleafContext.setVariable("bodyFragment",
+                "emails/body/" + template.getTemplateFileName().replace(".html", "")
         );
+
+        return templateEngine.process("emails/layout", thymeleafContext);
     }
 }

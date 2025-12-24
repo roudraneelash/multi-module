@@ -6,7 +6,6 @@ import com.multi.module.domain.notifications.enums.Notification;
 import com.multi.module.domain.notifications.model.NotificationContext;
 import com.multi.module.domain.notifications.model.NotificationRequest;
 import com.multi.module.domain.notifications.model.Recipients;
-import lombok.var;
 
 import java.time.LocalTime;
 import java.util.Arrays;
