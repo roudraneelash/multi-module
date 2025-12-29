@@ -10,7 +10,7 @@ public class PayoffAssetContextMapper
         implements NotificationContextMapper<FinanceRequest, PayoffAsset> {
 
     @Override
-    public Notification getNotificationType() {
+    public Notification getNotification() {
         return Notification.PAYOFF_ASSET;
     }
 

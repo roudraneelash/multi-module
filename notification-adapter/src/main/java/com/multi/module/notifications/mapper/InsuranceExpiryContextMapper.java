@@ -10,7 +10,7 @@ public class InsuranceExpiryContextMapper
         implements NotificationContextMapper<FinanceRequest, InsuranceExpiry> {
 
     @Override
-    public Notification getNotificationType() {
+    public Notification getNotification() {
         return Notification.INSURANCE_EXPIRY;
     }
 

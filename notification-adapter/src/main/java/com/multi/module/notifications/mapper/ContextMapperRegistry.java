@@ -5,39 +5,35 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
-public class ContextMapperRegistry {
+public final class ContextMapperRegistry {
 
-    private final Map<Key, NotificationContextMapper<?, ?>> registry;
+    private final Map<Notification, List<NotificationContextMapper<?, ?>>> registry;
 
     public ContextMapperRegistry(List<NotificationContextMapper<?, ?>> mappers) {
         this.registry = mappers.stream()
-                .collect(Collectors.toMap(
-                        m -> new Key(m.getNotificationType(), m.sourceType()),
-                        Function.identity()
-                ));
+                .collect(Collectors.groupingBy(NotificationContextMapper::getNotification));
     }
 
     @SuppressWarnings("unchecked")
-    public <S, T> T resolve(Notification notification, Object source) {
-
-        Key key = new Key(notification, source.getClass());
-
-        NotificationContextMapper<S, T> mapper =
-                (NotificationContextMapper<S, T>) registry.get(key);
-
-        if (mapper == null) {
-            throw new IllegalStateException(
-                    "No ContextMapper found for notification=" +
-                            notification + ", source=" + source.getClass().getSimpleName()
-            );
+    public <S,T> T resolve(Notification notification, S source){
+        List<NotificationContextMapper<?,?>> candidates= registry.get(notification);
+        if(candidates==null || candidates.isEmpty()){
+            throw new IllegalStateException("No mappers registered for notification=" +  notification);
         }
 
-        return mapper.map((S) source);
-    }
+        Class<?> sourceClass = source.getClass();
+        NotificationContextMapper<S,T> mapper = (NotificationContextMapper<S, T>)
+                candidates.stream()
+                        .filter(m->m.sourceType().isAssignableFrom(sourceClass))
+                        .findFirst()
+                        .orElseThrow(()-> new IllegalStateException(
+                                "No ContextMapper found for notification="+ notification +
+                                        ", sourceType=" + sourceClass.getSimpleName()
+                        ));
 
-    private record Key(Notification notification, Class<?> sourceType) {}
+        return mapper.map(source);
+    }
 }
