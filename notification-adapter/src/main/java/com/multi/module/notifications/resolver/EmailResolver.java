@@ -1,7 +1,7 @@
 package com.multi.module.notifications.resolver;
 
 import com.multi.module.domain.notifications.model.Recipients;
-import com.multi.module.notifications.model.Email;
+import com.multi.module.notifications.model.EmailMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ public class EmailResolver {
     @Value("${spring.mail.from}")
     private String fromEmail;
 
-    public Email resolve(
+    public EmailMessage resolve(
             String html,
             List<Recipients> recipients,
             String notificationName
@@ -25,7 +25,7 @@ public class EmailResolver {
 
         String subject = buildSubject(notificationName);
 
-        return Email.builder()
+        return EmailMessage.builder()
                 .from(fromEmail)
                 .to(to)
                 .subject(subject)

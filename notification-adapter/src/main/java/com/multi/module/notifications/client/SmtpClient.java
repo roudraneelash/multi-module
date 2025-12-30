@@ -1,7 +1,7 @@
 package com.multi.module.notifications.client;
 
 import com.multi.module.notifications.exception.EmailSendingException;
-import com.multi.module.notifications.model.Email;
+import com.multi.module.notifications.model.EmailMessage;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +26,17 @@ public class SmtpClient {
     /**
      * Primary adapter entry point.
      */
-    public void send(Email email) {
-        validateEmail(email);
+    public void send(EmailMessage emailMessage) {
+        validateEmail(emailMessage);
 
         try {
-            MimeMessage message = createMessage(email);
+            MimeMessage message = createMessage(emailMessage);
             mailSender.send(message);
 
             log.info(
                     "Email sent | to={} | subject={}",
-                    email.getTo(),
-                    email.getSubject()
+                    emailMessage.getTo(),
+                    emailMessage.getSubject()
             );
 
         } catch (MessagingException ex) {
@@ -49,7 +49,7 @@ public class SmtpClient {
         }
     }
 
-    private MimeMessage createMessage(Email email) throws MessagingException {
+    private MimeMessage createMessage(EmailMessage emailMessage) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(
@@ -58,40 +58,32 @@ public class SmtpClient {
                 StandardCharsets.UTF_8.name()
         );
 
-        if (hasText(email.getFrom())) {
-            helper.setFrom(email.getFrom().trim());
+        if (hasText(emailMessage.getFrom())) {
+            helper.setFrom(emailMessage.getFrom().trim());
         }
 
-        helper.setTo(toArray(email.getTo()));
+        helper.setTo(toArray(emailMessage.getTo()));
 
-        if (!isEmpty(email.getCc())) {
-            helper.setCc(toArray(email.getCc()));
-        }
-
-        if (!isEmpty(email.getBcc())) {
-            helper.setBcc(toArray(email.getBcc()));
-        }
-
-        helper.setSubject(email.getSubject().trim());
-        helper.setText(email.getHtmlBody(), true);
+        helper.setSubject(emailMessage.getSubject().trim());
+        helper.setText(emailMessage.getHtmlBody(), true);
 
         return message;
     }
 
-    private void validateEmail(Email email) {
-        if (email == null) {
+    private void validateEmail(EmailMessage emailMessage) {
+        if (emailMessage == null) {
             throw new IllegalArgumentException("Email must not be null");
         }
 
-        if (isEmpty(email.getTo())) {
+        if (isEmpty(emailMessage.getTo())) {
             throw new IllegalArgumentException("At least one recipient is required");
         }
 
-        if (!hasText(email.getSubject())) {
+        if (!hasText(emailMessage.getSubject())) {
             throw new IllegalArgumentException("Email subject must not be empty");
         }
 
-        if (!hasText(email.getHtmlBody())) {
+        if (!hasText(emailMessage.getHtmlBody())) {
             throw new IllegalArgumentException("Email body must not be empty");
         }
     }

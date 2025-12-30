@@ -2,7 +2,7 @@ package config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 @Configuration
@@ -20,10 +20,10 @@ public class ThymeleafTestConfig {
     }
 
     @Bean
-    public TemplateEngine templateEngine(
+    public SpringTemplateEngine templateEngine(
             ClassLoaderTemplateResolver thymeleafTemplateResolver
     ) {
-        TemplateEngine engine = new TemplateEngine();
+        SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setTemplateResolver(thymeleafTemplateResolver);
         return engine;
     }

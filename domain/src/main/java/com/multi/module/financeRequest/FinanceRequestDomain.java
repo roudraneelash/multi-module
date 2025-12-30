@@ -40,7 +40,7 @@ public class FinanceRequestDomain {
                 NotificationRequest.builder()
                         .recipients(recipients)
                         .context(new NotificationContext<>(financeRequest))
-                        .notificationType(Notification.PAYOFF_ASSET)
+                        .notificationType(Notification.PAYOFF_COMPLETED)
                         .build();
 
         client.sendNotification(notificationRequest);

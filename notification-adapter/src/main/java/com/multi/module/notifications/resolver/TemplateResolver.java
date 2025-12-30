@@ -8,14 +8,14 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Component
 @RequiredArgsConstructor
 public class TemplateResolver {
 
-    private final TemplateEngine templateEngine;
+    private final SpringTemplateEngine templateEngine;
     private final ContextMapperRegistry contextMapperRegistry;
 
     @Value("${app.email.logo-url}")
@@ -27,14 +27,11 @@ public class TemplateResolver {
     @Value("${app.email.contact-url}")
     private String contactUrl;
 
-    public String resolveTemplate(
-            NotificationContext<?> notificationContext,
-            Notification notification
-    ) {
-        NotificationTemplate template =
-                NotificationTemplate.from(notification);
+    public String resolveTemplate(NotificationContext<?> notificationContext, Notification notification) {
 
-        Object contextModel =
+        NotificationTemplate template = NotificationTemplate.getTemplate(notification);
+
+        var contextModel =
                 contextMapperRegistry.resolve(
                         notification,
                         notificationContext.getPayload()
@@ -43,9 +40,7 @@ public class TemplateResolver {
         Context thymeleafContext = new Context();
         thymeleafContext.setVariable("data", contextModel);
 
-        thymeleafContext.setVariable("bodyFragment",
-                "emails/body/" + template.getTemplateFileName().replace(".html", "")
-        );
+        thymeleafContext.setVariable("bodyFragment", "emails/body/" + template.getTemplateFileName());
 
         return templateEngine.process("emails/layout", thymeleafContext);
     }

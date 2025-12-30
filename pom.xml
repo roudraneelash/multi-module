@@ -25,6 +25,7 @@
         <module>domain-api</module>
         <module>domain</module>
         <module>notification-adapter</module>
+        <module>acceptance-test</module>
     </modules>
 
     <properties>

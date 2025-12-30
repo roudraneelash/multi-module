@@ -1,39 +1,48 @@
 package com.multi.module.notifications.mapper;
 
 import com.multi.module.domain.notifications.enums.Notification;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
-public final class ContextMapperRegistry {
+@RequiredArgsConstructor
+public class ContextMapperRegistry {
 
-    private final Map<Notification, List<NotificationContextMapper<?, ?>>> registry;
-
-    public ContextMapperRegistry(List<NotificationContextMapper<?, ?>> mappers) {
-        this.registry = mappers.stream()
-                .collect(Collectors.groupingBy(NotificationContextMapper::getNotification));
-    }
+    private final List<NotificationContextMapper<?, ?>> mappers;
 
     @SuppressWarnings("unchecked")
-    public <S,T> T resolve(Notification notification, S source){
-        List<NotificationContextMapper<?,?>> candidates= registry.get(notification);
-        if(candidates==null || candidates.isEmpty()){
-            throw new IllegalStateException("No mappers registered for notification=" +  notification);
+    public <S, T> T resolve(Notification notification, S payload) {
+
+        if (payload == null) {
+            throw new IllegalArgumentException("Payload must not be null");
         }
 
-        Class<?> sourceClass = source.getClass();
-        NotificationContextMapper<S,T> mapper = (NotificationContextMapper<S, T>)
-                candidates.stream()
-                        .filter(m->m.sourceType().isAssignableFrom(sourceClass))
-                        .findFirst()
-                        .orElseThrow(()-> new IllegalStateException(
-                                "No ContextMapper found for notification="+ notification +
-                                        ", sourceType=" + sourceClass.getSimpleName()
-                        ));
+        Class<?> payloadType = payload.getClass();
 
-        return mapper.map(source);
+        var matchingMappers = mappers.stream()
+                .filter(m -> m.notificationType() == notification)
+                .filter(m -> m.sourceType().isAssignableFrom(payloadType))
+                .toList();
+
+        if (matchingMappers.isEmpty()) {
+            throw new IllegalStateException(
+                    "No mapper found for notification=" + notification +
+                    ", payloadType=" + payloadType.getSimpleName()
+            );
+        }
+
+        if (matchingMappers.size() > 1) {
+            throw new IllegalStateException(
+                    "Multiple mappers found for notification=" + notification +
+                    ", payloadType=" + payloadType.getSimpleName()
+            );
+        }
+
+        NotificationContextMapper<S, T> mapper =
+                (NotificationContextMapper<S, T>) matchingMappers.get(0);
+
+        return mapper.map(payload);
     }
 }

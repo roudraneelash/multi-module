@@ -3,8 +3,7 @@ package com.multi.module.notifications;
 import com.multi.module.domain.notifications.model.NotificationRequest;
 import com.multi.module.domain.notifications.port.ObtainNotificationClient;
 import com.multi.module.notifications.client.SmtpClient;
-import com.multi.module.notifications.mapper.ContextMapperRegistry;
-import com.multi.module.notifications.model.Email;
+import com.multi.module.notifications.model.EmailMessage;
 import com.multi.module.notifications.resolver.EmailResolver;
 import com.multi.module.notifications.resolver.TemplateResolver;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +22,11 @@ public class NotificationService implements ObtainNotificationClient {
                 request.getContext(),
                 request.getNotificationType()
         );
-        Email email = emailResolver.resolve(
+        EmailMessage emailMessage = emailResolver.resolve(
                 html,
                 request.getRecipients(),
                 request.getNotificationType().name()
         );
-        smtpClient.send(email);
+        smtpClient.send(emailMessage);
     }
 }

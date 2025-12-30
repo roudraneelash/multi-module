@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class LimitExpiry {
+public class InsuranceExpiryNotification {
     private String financeEntity_name;
     private String dealer_name;
     private String expiry_Date;
