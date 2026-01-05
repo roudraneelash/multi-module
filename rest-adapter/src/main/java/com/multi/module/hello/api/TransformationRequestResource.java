@@ -1,6 +1,5 @@
 package com.multi.module.hello.api;
 
-import com.multi.module.financeRequest.FinanceRequestDomain;
 import com.multi.module.transformationRequest.TransformationRequestDomain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
