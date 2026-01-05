@@ -4,9 +4,10 @@ import com.multi.module.domain.notifications.enums.Notification;
 import com.multi.module.domain.notifications.model.NotificationContext;
 import com.multi.module.notifications.enums.NotificationTemplate;
 import com.multi.module.notifications.mapper.ContextMapperRegistry;
+import com.multi.module.notifications.model.EmailProperties;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -17,15 +18,7 @@ public class TemplateResolver {
 
     private final SpringTemplateEngine templateEngine;
     private final ContextMapperRegistry contextMapperRegistry;
-
-    @Value("${app.email.logo-url}")
-    private String logoUrl;
-
-    @Value("${app.email.copyright-url}")
-    private String copyrightUrl;
-
-    @Value("${app.email.contact-url}")
-    private String contactUrl;
+    private final EmailProperties emailProperties;
 
     public String resolveTemplate(NotificationContext<?> notificationContext, Notification notification) {
 
@@ -41,7 +34,7 @@ public class TemplateResolver {
         thymeleafContext.setVariable("data", contextModel);
 
         thymeleafContext.setVariable("bodyFragment", "body/" + template.getTemplateFileName());
-
+        thymeleafContext.setVariable("logoUrl", emailProperties.logoUrl());
         return templateEngine.process("layout", thymeleafContext);
     }
 }

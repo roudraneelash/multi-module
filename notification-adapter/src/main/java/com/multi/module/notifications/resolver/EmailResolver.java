@@ -2,17 +2,18 @@ package com.multi.module.notifications.resolver;
 
 import com.multi.module.domain.notifications.model.Recipients;
 import com.multi.module.notifications.model.EmailMessage;
-import org.springframework.beans.factory.annotation.Value;
+import com.multi.module.notifications.model.EmailProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class EmailResolver {
 
-    @Value("${spring.mail.from}")
-    private String fromEmail;
+    private final EmailProperties emailProperties;
 
     public EmailMessage resolve(
             String html,
@@ -26,7 +27,7 @@ public class EmailResolver {
         String subject = buildSubject(notificationName);
 
         return EmailMessage.builder()
-                .from(fromEmail)
+                .from(emailProperties.from())
                 .to(to)
                 .subject(subject)
                 .htmlBody(html)
