@@ -5,13 +5,23 @@ import com.multi.module.domain.notifications.enums.Notification;
 import com.multi.module.notifications.model.context.PayoffNotification;
 import org.springframework.stereotype.Component;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 @Component
 public class PayoffFromFinanceRequestMapper
         implements NotificationContextMapper<FinanceRequest, PayoffNotification> {
 
+    private static final Set<Notification> SUPPORTED_NOTIFICATIONS =
+            EnumSet.of(
+                    Notification.PAYOFF_COMPLETED,
+                    Notification.PAYOFF_INITIATED,
+                    Notification.PAYOFF_REJECTED
+            );
+
     @Override
-    public Notification notificationType() {
-        return Notification.PAYOFF_COMPLETED;
+    public boolean supports(Notification notification) {
+        return SUPPORTED_NOTIFICATIONS.contains(notification);
     }
 
     @Override

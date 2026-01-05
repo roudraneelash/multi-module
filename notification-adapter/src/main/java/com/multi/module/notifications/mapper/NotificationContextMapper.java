@@ -4,7 +4,7 @@ import com.multi.module.domain.notifications.enums.Notification;
 
 public interface NotificationContextMapper<S,T> {
 
-    Notification notificationType();
+    boolean supports(Notification notification);
 
     Class<S> sourceType();
 

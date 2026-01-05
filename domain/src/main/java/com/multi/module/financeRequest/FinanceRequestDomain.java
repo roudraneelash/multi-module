@@ -25,7 +25,7 @@ public class FinanceRequestDomain {
                 .serialNumber("ZX200-9988")
                 .manufacturer("Hitachi")
                 .typeOfBusiness("LOAN")
-                .payoffStatus("APPROVED")
+                .payoffStatus("COMPLETED")
                 .creator("system-user")
                 .approver("manager-1")
                 .disbursementDate(LocalDate.now().minusMonths(6))

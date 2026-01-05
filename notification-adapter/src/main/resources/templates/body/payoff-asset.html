@@ -1,0 +1,44 @@
+<div th:fragment="body" class="body">
+    <p>Dear Sir/Madam,</p>
+    <p>
+        An asset has been marked for payoff in the
+        <strong>Equipment Finance</strong> system.
+    </p>
+
+    <div class="info-box">
+        <div class="info-row">
+            <strong class="label">Finance Entity</strong>
+            <span th:text="${data.financeEntityName}"></span>
+        </div>
+        <div class="info-row">
+            <strong class="label">Dealer Name</strong>
+            <span th:text="${data.dealerName}"></span>
+        </div>
+        <div class="info-row">
+            <strong class="label">Asset Name</strong>
+            <span th:text="${data.assetName}"></span>
+        </div>
+        <div class="info-row">
+            <strong class="label">Outstanding Amount</strong>
+            <span th:text="${data.outstandingAmount}"></span>
+        </div>
+        <div class="info-row">
+            <strong class="label">Payoff Status</strong>
+            <span th:text="${data.payoffStatus}"></span>
+        </div>
+        <div class="info-row">
+            <strong class="label">Created By</strong>
+            <span th:text="${data.creator}"></span>
+        </div>
+        <div class="info-row">
+            <strong class="label">Approved By</strong>
+            <span th:text="${data.approver}"></span>
+        </div>
+    </div>
+    <p>Please review the payoff details and take necessary action.</p>
+    <p>
+        Best regards,<br/>
+        <strong>BPCE</strong><br/>
+        Equipment Finance Team
+    </p>
+</div>

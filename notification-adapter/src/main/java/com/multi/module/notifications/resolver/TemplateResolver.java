@@ -40,8 +40,8 @@ public class TemplateResolver {
         Context thymeleafContext = new Context();
         thymeleafContext.setVariable("data", contextModel);
 
-        thymeleafContext.setVariable("bodyFragment", "emails/body/" + template.getTemplateFileName());
+        thymeleafContext.setVariable("bodyFragment", "body/" + template.getTemplateFileName());
 
-        return templateEngine.process("emails/layout", thymeleafContext);
+        return templateEngine.process("layout", thymeleafContext);
     }
 }

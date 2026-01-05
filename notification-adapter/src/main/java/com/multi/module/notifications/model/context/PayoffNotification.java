@@ -7,10 +7,10 @@ import lombok.Data;
 @Builder
 public class PayoffNotification {
     private String financeEntityName;
-    private String payoffStatus;
-    private String creator;
-    private String approver;
     private String dealerName;
     private String assetName;
     private String outstandingAmount;
+    private String payoffStatus;
+    private String creator;
+    private String approver;
 }
