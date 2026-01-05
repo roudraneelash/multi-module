@@ -1,6 +1,6 @@
 package com.multi.module.notifications.exception;
 
-public class EmailSendingException extends RuntimeException {
+public class EmailSendingException extends NotificationException {
 
     public EmailSendingException(String message) {
         super(message);
