@@ -45,13 +45,11 @@ spring:
           writetimeout: 5000
 
 # Application specific properties
-app:
-  email:
-    logo-url: https://www.equipmentsolutions.groupebpce.com/app/uploads/2025/02/bpce-sgef-rvb.jpg
-    copyright-url: https://www.equipmentsolutions.groupebpce.com/
-    contact-url: https://www.equipmentsolutions.groupebpce.com/contact-us/
+email:
+  brandName: BPCE Equipment Finance
+  logoUrl: https://www.equipmentsolutions.groupebpce.com/app/uploads/2025/02/logo-bpce-es-400x80-1.png
+  from: noreply@equipmentsolutions.groupebpce.com
 
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
-
