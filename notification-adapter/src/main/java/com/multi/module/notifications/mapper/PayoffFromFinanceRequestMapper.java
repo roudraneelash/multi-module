@@ -2,9 +2,11 @@ package com.multi.module.notifications.mapper;
 
 import com.multi.module.domain.financeRequest.model.FinanceRequest;
 import com.multi.module.domain.notifications.enums.Notification;
+import com.multi.module.notifications.exception.InvalidNotificationRequestException;
 import com.multi.module.notifications.model.context.PayoffNotification;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -33,7 +35,9 @@ public class PayoffFromFinanceRequestMapper
     public PayoffNotification map(FinanceRequest request) {
 
         if (request == null) {
-            throw new IllegalArgumentException("FinanceRequest must not be null");
+            throw new InvalidNotificationRequestException(
+                    "FinanceRequest payload must not be null"
+            );
         }
 
         return PayoffNotification.builder()
@@ -47,7 +51,7 @@ public class PayoffFromFinanceRequestMapper
                 .build();
     }
 
-    private String formatAmount(java.math.BigDecimal amount) {
+    private String formatAmount(BigDecimal amount) {
         return amount != null ? amount.toPlainString() : null;
     }
 }

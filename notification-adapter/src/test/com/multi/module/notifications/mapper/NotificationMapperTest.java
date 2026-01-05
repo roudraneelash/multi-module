@@ -68,8 +68,8 @@ class NotificationMapperTest {
 
     @Test
     void shouldReturnCorrectNotificationType() {
-        assertEquals(Notification.PAYOFF_COMPLETED, financeRequestMapper.notificationType());
-        assertEquals(Notification.PAYOFF_COMPLETED, transformationRequestMapper.notificationType());
+        assertTrue(financeRequestMapper.supports(Notification.PAYOFF_COMPLETED));
+        assertTrue(transformationRequestMapper.supports(Notification.PAYOFF_COMPLETED));
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.multi.module.notifications.mapper;
 
 import com.multi.module.domain.TransformationRequest.model.TransformationRequest;
 import com.multi.module.domain.notifications.enums.Notification;
+import com.multi.module.notifications.exception.InvalidNotificationRequestException;
 import com.multi.module.notifications.model.context.PayoffNotification;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +34,9 @@ public class PayoffFromTransformationRequestMapper
     public PayoffNotification map(TransformationRequest request) {
 
         if (request == null) {
-            throw new IllegalArgumentException("TransformationRequest must not be null");
+            throw new InvalidNotificationRequestException(
+                    "TransformationRequest payload must not be null"
+            );
         }
 
         return PayoffNotification.builder()

@@ -84,7 +84,7 @@ class NotificationServiceIT {
         MimeMessage[] messages = greenMail.getReceivedMessages();
         assertEquals(2, messages.length);
 
-        assertRecipients(messages, "r1@test.com", "r2@test.com");
+        assertRecipients(messages, "test1@email.com", "test2@email.com");
 
         String body = GreenMailUtil.getBody(messages[0]);
         assertTrue(body.contains("ABC Finance Ltd"));
@@ -160,7 +160,7 @@ class NotificationServiceIT {
         MimeMessage[] messages = greenMail.getReceivedMessages();
         assertEquals(2, messages.length);
 
-        assertRecipients(messages, "r1@test.com", "r2@test.com");
+        assertRecipients(messages, "test1@email.com", "test2@email.com");
 
         String body = GreenMailUtil.getBody(messages[0]);
 //        assertTrue(body.contains("XYZ Finance Corp"));
@@ -180,8 +180,8 @@ class NotificationServiceIT {
         return NotificationRequest.builder()
                 .notificationType(notification)
                 .recipients(List.of(
-                        Recipients.builder().emailId("r1@test.com").build(),
-                        Recipients.builder().emailId("r2@test.com").build()
+                        Recipients.builder().emailId("test1@email.com").build(),
+                        Recipients.builder().emailId("test2@email.com").build()
                 ))
                 .context(new NotificationContext<>(payload))
                 .build();

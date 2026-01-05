@@ -1,6 +1,8 @@
 package com.multi.module.notifications.mapper;
 
 import com.multi.module.domain.notifications.enums.Notification;
+import com.multi.module.notifications.exception.InvalidNotificationRequestException;
+import com.multi.module.notifications.exception.NotificationMappingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,58 +18,48 @@ public class ContextMapperRegistry {
 
     @SuppressWarnings("unchecked")
     public <S, T> T resolve(Notification notification, S payload) {
-        log.debug("Available mappers: {}", mappers);
+        if (notification == null) {
+            throw new InvalidNotificationRequestException(
+                    "Notification type must not be null"
+            );
+        }
 
         if (payload == null) {
-            throw new IllegalArgumentException("Payload must not be null");
+            throw new InvalidNotificationRequestException(
+                    "Notification payload must not be null for notification=" + notification
+            );
         }
 
         Class<?> payloadType = payload.getClass();
-
-        var matchingMappers = mappers.stream()
-                .peek(mapper -> log.debug("Checking mapper: {} for notification: {}",
-                        mapper.getClass().getSimpleName(), notification))
-                .filter(mapper -> {
-                    boolean supports = mapper.supports(notification);
-                    log.debug("Mapper {} supports notification {}: {}",
-                            mapper.getClass().getSimpleName(), notification, supports);
-                    return supports;
-                })
-                .filter(mapper -> {
-                    boolean assignable = mapper.sourceType().isAssignableFrom(payloadType);
-                    log.debug("Mapper {} can handle payload type {}: {}",
-                            mapper.getClass().getSimpleName(), payloadType.getSimpleName(), assignable);
-                    return assignable;
-                })
-                .toList();
-
-        log.info("Found {} matching mappers for notification={}, payloadType={}: {}",
-                matchingMappers.size(), notification, payloadType.getSimpleName(), matchingMappers);
+        List<NotificationContextMapper<?, ?>> matchingMappers =
+                mappers.stream()
+                        .filter(mapper -> mapper.supports(notification))
+                        .filter(mapper -> mapper.sourceType().isAssignableFrom(payloadType))
+                        .toList();
 
         if (matchingMappers.isEmpty()) {
-            String error = String.format(
-                    "No mapper found for notification=%s, payloadType=%s",
-                    notification, payloadType.getSimpleName()
+            throw new NotificationMappingException(
+                    notification,
+                    payloadType,
+                    "No mapper found for notification=" + notification +
+                            ", payloadType=" + payloadType.getSimpleName()
             );
-            log.error(error);
-            throw new IllegalStateException(error);
         }
 
         if (matchingMappers.size() > 1) {
-            String error = String.format(
-                    "Multiple mappers found for notification=%s, payloadType=%s. Mappers: %s",
-                    notification, payloadType.getSimpleName(), matchingMappers
+            throw new NotificationMappingException(
+                    notification,
+                    payloadType,
+                    "Multiple mappers found for notification=" + notification +
+                            ", payloadType=" + payloadType.getSimpleName() +
+                            ", mappers=" + matchingMappers.stream()
+                            .map(m -> m.getClass().getSimpleName())
+                            .toList()
             );
-            log.error(error);
-            throw new IllegalStateException(error);
         }
 
         NotificationContextMapper<S, T> mapper =
                 (NotificationContextMapper<S, T>) matchingMappers.get(0);
-
-        log.info("Using mapper: {} for notification: {}",
-                mapper.getClass().getSimpleName(), notification);
-
         return mapper.map(payload);
     }
 }

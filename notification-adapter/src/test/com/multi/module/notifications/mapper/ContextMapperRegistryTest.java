@@ -3,6 +3,8 @@ package com.multi.module.notifications.mapper;
 import com.multi.module.domain.TransformationRequest.model.TransformationRequest;
 import com.multi.module.domain.financeRequest.model.FinanceRequest;
 import com.multi.module.domain.notifications.enums.Notification;
+import com.multi.module.notifications.exception.InvalidNotificationRequestException;
+import com.multi.module.notifications.exception.NotificationMappingException;
 import com.multi.module.notifications.model.context.PayoffNotification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,22 +74,59 @@ class ContextMapperRegistryTest {
     void shouldFailWhenNoMapperFound() {
         FinanceRequest request = buildFinanceRequest();
 
-        IllegalStateException ex = assertThrows(
-                IllegalStateException.class,
+        NotificationMappingException ex = assertThrows(
+                NotificationMappingException.class,
                 () -> registry.resolve(Notification.INSURANCE_EXPIRY, request)
         );
 
+        assertEquals(Notification.INSURANCE_EXPIRY, ex.getNotification());
+        assertEquals(FinanceRequest.class, ex.getPayloadType());
         assertTrue(ex.getMessage().contains("No mapper found"));
     }
 
     @Test
     void shouldFailWhenPayloadIsNull() {
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
+        InvalidNotificationRequestException ex = assertThrows(
+                InvalidNotificationRequestException.class,
                 () -> registry.resolve(Notification.PAYOFF_COMPLETED, null)
         );
 
-        assertEquals("Payload must not be null", ex.getMessage());
+        assertTrue(ex.getMessage().contains("payload must not be null"));
+    }
+
+    @Test
+    void shouldFailWhenNotificationIsNull() {
+        FinanceRequest request = buildFinanceRequest();
+
+        InvalidNotificationRequestException ex = assertThrows(
+                InvalidNotificationRequestException.class,
+                () -> registry.resolve(null, request)
+        );
+
+        assertTrue(ex.getMessage().contains("Notification type must not be null"));
+    }
+
+    @Test
+    void shouldFailWhenMultipleMappersMatch() {
+        // Artificially register duplicate mapper to force ambiguity
+        ContextMapperRegistry ambiguousRegistry =
+                new ContextMapperRegistry(
+                        List.of(
+                                new PayoffFromFinanceRequestMapper(),
+                                new PayoffFromFinanceRequestMapper() // duplicate
+                        )
+                );
+
+        FinanceRequest request = buildFinanceRequest();
+
+        NotificationMappingException ex = assertThrows(
+                NotificationMappingException.class,
+                () -> ambiguousRegistry.resolve(Notification.PAYOFF_COMPLETED, request)
+        );
+
+        assertEquals(Notification.PAYOFF_COMPLETED, ex.getNotification());
+        assertEquals(FinanceRequest.class, ex.getPayloadType());
+        assertTrue(ex.getMessage().contains("Multiple mappers found"));
     }
 
     // ---------------------------------------------------------
